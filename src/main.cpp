@@ -57,6 +57,17 @@ void scan_matrix() {
 }
 
 void loop() {
+
+  /*scan_matrix();
+
+  for (int r = 0; r < ROWS; r++) {
+    for (int c = 0; c < COLS; c++) {
+      if (key_states[r][c]) {
+        // Do something with the key press
+      }
+    }
+  }*/
+
   // simulate a keyboard input
   if (usb_hid.ready()) {
     uint8_t keycode[6] = {0}; // keycode buffer
