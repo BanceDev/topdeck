@@ -52,21 +52,26 @@ public:
         }
     }
 
-    void sendKeyPress(int row, int col) {
-        Keyboard.pressRaw(keymap[row][col]);
-    }
+    void handleState() {
+        bool fn_layer = key_states[4][1];
 
-    void sendKeyRelease(int row, int col) {
-        Keyboard.releaseRaw(keymap[row][col]);
-    }
-
-    void simulateKeyPress() {
-        uint8_t keycode[6] = {0};
-        keycode[0] = HID_KEY_A;
-        Keyboard.pressRaw(HID_KEY_A);
-        delay(100);
-        Keyboard.releaseRaw(HID_KEY_A);
-        delay(1000);
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (fn_layer && fn_keymap[r][c] != 0) {
+                    if (key_states[r][c]) {
+                        Keyboard.pressRaw(fn_keymap[r][c]);
+                    } else {
+                        Keyboard.releaseRaw(fn_keymap[r][c]);
+                    }
+                } else {
+                    if (key_states[r][c]) {
+                        Keyboard.pressRaw(keymap[r][c]);
+                    } else {
+                        Keyboard.releaseRaw(keymap[r][c]);
+                    }
+                }
+            }
+        }
     }
 };
 
@@ -77,7 +82,6 @@ void setup() {
 }
 
 void loop() {
-    // keyboard.scanMatrix();
-
-    kb.simulateKeyPress();
+    kb.scanMatrix();
+    kb.handleState();
 }
